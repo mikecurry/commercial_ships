@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>IO Tradespace</title>
+<style> /* set the CSS */
+
+body {
+  font-size: 12px;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  /*margin: 24px;*/
+  background-color: white;
+  line-height: 1.45em;
+}
+
+.dot{
+	fill-opacity:.85;
+}
+
+path { 
+	stroke: steelblue;
+	stroke-width: 1;
+	fill: none;
+}
+.colorNode{
+	/*fill:lightgrey;	*/
+	/*opacity:.5;*/
+}
+.colorNode:hover{
+	/*fill:black;*/
+}
+.radiusNode{
+	/*fill:lightgrey;	*/
+	/*opacity:.5;*/
+}
+.radiusNode:hover{
+	/*fill:black;*/
+}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: black;
+	stroke-width: 3;
+	shape-rendering: crispEdges;
+}
+
+
+.titleBar{
+	margin-left:50px;
+	margin-top:5px;
+
+}
+#scatterPlot{
+
+}
+#parc{
+
+}
+
+.titleBarMain{
+	position:absolute;
+	/*margin-top:0px;*/
+}
+
+</style>
+<body>
+</br>	
+<div id="scatterPlot" class="scatter" style="width:1000px;height:290px;"></div>
+<div id="chartDivider">
+	<svg width=425 height="20">
+		<rect x="0" y="0" width=100% height=100% fill="#1F3568"/>
+		<text x="10" y="14" font-family="Arial" font-size="12px" fill="white">Design Variables</text>
+	</svg>
+	<svg width=210 height="20">
+		<rect x="0" y="0" width=100% height=100% fill="#CACACA" />
+		<text x="10" y="14" font-family="Arial" font-size="12px" fill="white">Performance Attributes</text>
+	</svg>
+	<svg width=320 height="20">
+		<rect x="0" y="0" width=100% height=100% fill="#833635" />
+		<text x="10" y="14" font-family="Arial" font-size="12px" fill="white">Value Attributes</text>
+	</svg>
+</div>
+<div id="parc" class="parcoords" style="width:580px;height:0px;"></div>
+
+<!--Turn off javascript cache-->
+<meta http-equiv="no-cache">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="Cache-Control" content="no-cache">
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/d3.parcoords.css">
+<link rel="stylesheet" type="text/css" href="css/style-climate.css">
+<script type="text/javascript" src="d3/d3.v3.js"></script>
+<script src="js/d3.parcoords-ehk5.js"></script>
+
+<script>
+
+
+var modulor;
+var dataList=[];
+//var mainWidth=580;
+var mainWidth=1000;
+var mainHeight = 300;
+var contents;
+var module;
+var iterationValue;
+var parcolor="black";
+var toolhover;
+var mainRad=2;
+var colMin,colMax;
+var color;
+var parcoords;
+var yPicker;
+var xPicker;
+var pickCircle;
+var pickRectangle;
+var curX=["MAE2"];
+var curY=["MAU2"];
+// var curRad=["RH"];
+// var curCol=["DewPoint"];
+var curRad;
+var curCol;
+var colorado=d3.scale.category20();
+var objectivity=[];
+var categories=["MAU2"];
+var objectify={};
+var allObjects=[];
+
+var trends;
+var scatters;
+var xAx,yAx,xAxText,yAxText;
+var transDur=1600;
+var transBack=transDur;
+var fullList=[];
+
+
+//var unitList=["","","°C","°C","%","Pa","Wh/m2","Wh/m2","Wh/m2","Wh/m2","Wh/m2","Wh/m2","lux","lux","lux","Cd/m2","°","m/s","","","km","m","mm",""]
+//var unitList=["","","","kg","","kg","","m/s","kg","","s","kg","kg","","$M","","","",""]
+var unitList=["","","kg","","$M","","","","","","","","","","","","",""]
+/*		  
+var colorScale = 
+	d3.scale.linear()
+	  .range(["maroon","darkcyan"])
+	  .interpolate(d3.interpolateHsl);
+*/
+var colorScale = 
+	d3.scale.linear()
+	  .range(["#E47E21","#4977B1"])
+	  .interpolate(d3.interpolateHsl);
+
+// Set the dimensions of the canvas / graph
+var	margin = {top: 5, right: 65, bottom: 40, left:30},
+	width = mainWidth - margin.left - margin.right,
+	height = mainHeight - margin.top - margin.bottom;
+
+// Parse the date / time
+// var	parseDate = d3.time.format("%d-%b-%y").parse;
+var	parseDates = d3.time.format("%m-%d-%H-%M").parse;
+
+// Set the ranges
+var	x = d3.time.scale().range([0, width]);
+var	x2 = d3.scale.linear().range([0, width]);
+var	y = d3.scale.linear().range([height, 0]);
+var	y2 = d3.time.scale().range([height, 0]);
+var radScale=d3.scale.linear().range([1, 5]);
+
+
+
+// Define the axes
+var	xAxis = d3.svg.axis().scale(x)
+	.orient("bottom").ticks(5);
+var xAxis2=d3.svg.axis().scale(x2)
+	.orient("bottom").ticks(5);
+var	yAxis = d3.svg.axis().scale(y)
+	.orient("left").ticks(5); 
+var	yAxis2 = d3.svg.axis().scale(y2)
+	.orient("left").ticks(5); 
+// Adds the svg canvas
+
+
+// Get the data
+var brushedIn;
+var brushedOut;
+var dataBase=[];
+var data2=[];
+var dates=[];
+var dataAll=[];		
+var csver;	 
+var dataBase2=[];
+var svgTrend;
+var titleTool = d3.select("#titler")
+    .attr("class", "titleBar")   
+    ;
+var moduleTool = d3.select("#moduleSpacer")
+    .attr("class", "refreshModule")   
+    ;
+
+dataCollectionSatellite(10);
+
+function map_range(value, low1, high1, low2, high2) {
+    return low2 + (high2 - low2) * (Math.min(high1,Math.max(value,low1)) - low1) / (high1 - low1);
+};
+
+function dataCollectionSatellite(modulor){
+
+	svgTrend = d3.select("#scatterPlot")
+		.append("svg")
+			.attr("class","therealliang")
+			.attr("width", width + margin.left + margin.right)
+			.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	
+	// EDIT: filename
+	//d3.text("data/data_file_NTNU_ECO.csv", function(error,data) {
+	d3.text("data/data_file_NTNU_IO.csv", function(error,data) {
+		
+		dataAll=d3.csv.parseRows(data);
+		
+		var dataBase=[];
+
+		dataAll.forEach(function(j,k) {	
+			if(k>7&&k%modulor==0){
+				dataBase.push(dataAll[k]);
+			}
+		});
+		
+		titleTool
+
+//L,B,Dr,Crane,POB,Power,LWI,MP,Light weight,Deck Area,Depth_T,dwt,Weight hull,Speed,Theoretical op depth,Hs,CAPEX,kOPEX,kVOYEX,First Mover,Repeatability,Multi func.,Agility,Acq. Aff.,Op. Aff.,MAU1,MAE1
+//L,B,Dr,Crane,POB,Power,LWI,MP,Light_weight,Deck_Area,Depth_T,dwt,Weight_hull,Speed,Theoretical_op_depth,Hs,CAPEX,kOPEX,kVOYEX,LWC_score,GV1,GV2,acq_aff,op_aff,MAU2,MAE2	
+		dataBase.forEach(function(d,i) {	
+
+			d.L						= +dataBase[i][0];
+			d.B						= +dataBase[i][1];
+			d.Dr    				= +dataBase[i][2];
+			d.Crane					= +dataBase[i][3];
+			d.POB					= +dataBase[i][4];
+			d.Power					= +dataBase[i][5];
+			d.LWI					= +dataBase[i][6];
+			d.MP					= +dataBase[i][7];
+			
+			d.Light_weight			= +dataBase[i][8];
+			d.Deck_Area				= +dataBase[i][9];
+			d.Depth_T				= +dataBase[i][10];
+			d.dwt					= +dataBase[i][11];
+			d.Weight_hull 			= +dataBase[i][12];
+			d.Speed					= +dataBase[i][13];
+			d.Theoretical_op_depth	= +dataBase[i][14];
+			d.Hs					= +dataBase[i][15];	
+			d.CAPEX					= +dataBase[i][16];
+			d.kOPEX					= +dataBase[i][17];
+			d.kVOYEX				= +dataBase[i][18];
+			
+			d.LWC_score				= +dataBase[i][19];
+			d.GV1					= +dataBase[i][20];
+			d.GV2					= +dataBase[i][21];
+			d.acq_aff				= +dataBase[i][22];
+			d.op_aff				= +dataBase[i][23];
+			d.MAU2					= +dataBase[i][24];
+			d.MAE2					= +dataBase[i][25];	
+
+			objectify={"L":d.L,
+					   "B":d.B,
+					   "Dr":d.Dr,
+					   "Crane":d.Crane,
+					   "POB":d.POB,
+					   "Power":d.Power,
+					   "LWI":d.LWI,
+					   "MP":d.MP,
+					   "Deck_Area":d.Deck_Area,
+					   "dwt":d.dwt,
+					   "Theor_op_depth":d.Theoretical_op_depth,
+					   "Hs":d.Hs,
+					   
+					   "LWC_score":d.LWC_score,
+					   "GV1":d.GV1,
+					   "GV2":d.GV2,
+					   "acq_aff":d.acq_aff,
+					   "op_aff":d.op_aff,
+					   "MAU2":d.MAU2,
+					   "MAE2":d.MAE2
+			};
+
+			  		
+			allObjects.push(objectify);
+
+
+		});
+		
+		parcoordRun();
+		plotTrend(allObjects,allObjects,categories);
+		
+	});
+
+
+}
+
+
+var brushees=allObjects;	
+
+function renegotiateRadius(runner){
+	
+	function curry(runner){
+		if(curRad!="repeat"){
+			curRad=[runner];
+		}
+		else{
+			curRad=undefined;
+		}
+	}
+	function checkRepeat(runner){
+		if(curRad!=undefined){	
+			if(curRad[0]==runner){
+				curRad="repeat";
+			}
+		}
+	}
+		
+	$.when(checkRepeat(runner)).done(function(){	
+		$.when(curry(runner)).done(function(){
+				plotUpdate(allObjects,brushees,0);
+		});			
+	});
+	
+}
+
+	
+function renegotiateColor(runner){
+	// console.log(parcoords.color());
+	function curry(runner){
+		if(curCol!="repeat"){
+			curCol=[runner];
+		}
+		else{
+			curCol=undefined;
+		}
+	}
+	function checkRepeat(runner){
+		if(curCol!=undefined){	
+			if(curCol[0]==runner){
+				curCol="repeat";
+			}
+		}
+	}
+		
+	$.when(checkRepeat(runner)).done(function(){	
+		$.when(curry(runner)).done(function(){
+			// console.log(curCol);
+				plotUpdate(allObjects,brushees,0);
+		});			
+	});
+
+}	
+	
+
+function renegotiateY(runner){
+	
+	function curry(runner){
+		curY=[runner];
+	}
+	
+	$.when(curry(runner)).done(function(){
+		// console.log(curY);
+		plotUpdate(allObjects,brushees,0);
+	});	
+}	
+
+
+function renegotiateX(runner){
+	function curry(runner){
+		curX=[runner];
+	}
+	
+	$.when(curry(runner)).done(function(){
+		// console.log(curX);
+		plotUpdate(allObjects,brushees,0);
+		// console.log(d3.select)
+	});	
+}	
+
+
+function plotTrend(allObjects,brushedObjects,init,brusher){
+	//x.domain(d3.extent(allObjects, function(d) { return d.Date; }));
+	x.domain(d3.extent(allObjects, function(d) { return d.inclination; }));
+	//y.domain((d3.extent(allObjects,function(d){return d[curY[0]];})));
+	y.domain(d3.extent(allObjects, function(d) { return d.inclination; }));
+	
+	xAx=svgTrend.append("g")			
+			.attr("class", "x axis")
+			.attr("transform", "translate(0," + height + ")")
+			.call(xAxis)
+			;
+	xAxText=xAx.append("text")
+	      .attr("transform", "translate("+width+",-20)")
+	      .attr("y", 6)
+	      .attr("dy", ".71em")
+	      .style("text-anchor", "end")
+	      .text(curX[0])	
+			;
+	// Add the Y Axis
+	yAx=svgTrend.append("g")		
+			.attr("class", "y axis")
+			.call(yAxis)
+			;
+	yAxText=yAx.append("text")
+	      .attr("transform", "rotate(-90)")
+	      .attr("y", 6)
+	      .attr("dy", ".71em")
+	      .style("text-anchor", "end")
+	      .text(curY[0])
+      		;
+	
+	 scatters=svgTrend.append("g")
+		.attr("class","sofresh")
+		;
+
+	var mainRad=2;
+
+	scattered= 
+	 	scatters.append("g")
+	 	.selectAll(".dot")
+      .data(brushedObjects)		      
+      .enter().append("circle")
+      .attr("class", "dot")
+      ;
+      
+	scattered
+		      .attr("r", mainRad)
+		      .attr("cx", function(d) { 
+		      	if(curX=="Date"){		      	
+		      		return x(d[curX[0]]);
+		      		}	
+		      	else{		      	
+		      		return x2(d[curX[0]]);
+		      		}			  
+		      	})
+		      .attr("cy", function(d) { 
+			      		return y(d[curY[0]]);
+	      		})
+			;
+tooltipper();
+}		
+
+function plotScrub(allObjects,brushedObjects,init,brusher){
+	
+	function initiate(){
+		if(scatters!=undefined){
+			scatters.remove();
+			scattered.remove();
+		}
+	}
+	$.when(initiate()).done(function(){
+	 scatters=svgTrend.append("g")
+		.attr("class","sofresh")
+		
+		;
+
+	
+
+
+	 scattered= 
+	 	scatters.append("g")
+	 	.selectAll(".dot")
+      .data(brushedObjects)		      
+      .enter().append("circle")
+      .attr("class", "dot")
+
+		;	
+	 scattered
+		  	  
+		      .attr("r", mainRad)
+		      .attr("cx", function(d) { 
+		      	if(curX=="Date"){		      	
+		      		return x(d[curX[0]]);
+		      		}	
+		      	else{		      	
+		      		return x2(d[curX[0]]);
+		      		}			  
+		      	})
+		      .attr("cy", function(d) { 
+			      		return y(d[curY[0]]);
+	      		})
+			;
+	});	
+	// console.log(mainRad);
+	tooltipper(mainRad);
+
+}	
+
+function tooltipper(mainRad){
+var objectifyHighlight={};
+	
+	//tooltip time
+var formatTime = d3.time.format("%B %e");
+
+var divTool = d3.select("body").append("div")   
+    .attr("class", "tooltip")               
+    .style("opacity", 0)
+    ;
+
+   scattered
+        .on("mouseover", function(d) {   
+        	fullList=[];
+        	objectifyHighlight={};      	   
+        	scattered.transition()
+        		.duration(200)
+        		.style("stroke",function(q){if (q==d){return "black";}else{return "none";}})
+        		.style("stroke-width",function(q){if (q==d){return 5;}else{return 0;}})
+        		// .attr("r",function(q){if (q==d){toolhover=d3.select(this).attr("r");return 8;}else{return d3.select(this).attr("r");}})
+        		; 
+            divTool.transition()        
+                .duration(200)      
+                .style("opacity", .85);    
+            
+            
+            
+            var finderX,finderY,finderRad,finderCol;
+ 			
+ 			var allNames=parcoords.dimensions();
+            for(var i=0;i<parcoords.dimensions().length;i++){
+            	fullList.push(d[parcoords.dimensions()[i]]);	
+            	if(allNames[i]==curX[0]){finderX=i;}
+            	if(allNames[i]==curY[0]){finderY=i;}
+            	if(curRad!=undefined){
+            		if(allNames[i]==curRad[0]){finderRad=i;}
+            	}
+            	if(curCol!=undefined){
+            		if(allNames[i]==curCol[0]){finderCol=i;}
+            	}
+            	// allNames.push(d[parcoords.dimensions()]);
+			} ;
+			// console.log(allObjects);
+			
+			for(var i=0;i<fullList.length;i++){
+				var newFieldName=parcoords.dimensions()[i];
+				var newFieldValue=d[parcoords.dimensions()[i]];
+				// console.log(newFieldName);
+				// console.log(parcoords.dimensions());
+				// console.log(newFieldValue);
+				objectifyHighlight[newFieldName]=newFieldValue;
+			}
+			// console.log(objectifyHighlight);
+		
+			// for(var i=0;i<fullList.length;i++){
+				// var newFieldName=Object.keys(objectify)[i];
+				// var newFieldValue=fullList[i];
+				// objectifyHighlight[newFieldName]=newFieldValue;
+			// }
+			
+			
+			
+			// console.log(objectifyHighlight);
+			// console.log(allObjects);
+			// console.log(objectify);
+			
+			            parcoords.highlight([objectifyHighlight]);
+			            parcoords.render();
+//      
+
+            // console.log(unitList[finderCol]);
+            // console.log(allNames);
+            // console.log(fullList);
+            // d3.selectAll(".axisValue")
+            	// .text(fullList)
+            	// ;
+            	
+           //update parcoords axes
+            d3.selectAll(".axisValue").text(function(d,i){
+            	if(i==1000){
+            		console.log(fullList[i])
+            		return formatTime(fullList[i])+" "+unitList[i];
+            	}
+            	else{
+            		console.log('bar')
+	            	return fullList[i]+" "+unitList[i];
+            	}
+        	});
+            
+            //format date vs not formatting date
+            if(curX[0]=="Date"){var newCurX=formatTime(d[curX[0]]);}  else{var newCurX=d[curX[0]]+" " +unitList[finderX];}
+            if(curY[0]=="Date"){var newCurY=formatTime(d[curY[0]]);}  else{var newCurY=d[curY[0]]+" " +unitList[finderY];}
+            if(curRad!=undefined){if(curRad[0]=="Date"){var newCurRad=formatTime(d[curRad[0]]);}  else{var newCurRad=d[curRad[0]]+" " +unitList[finderRad];}}
+            if(curCol!=undefined){if(curCol[0]=="Date"){var newCurCol=formatTime(d[curCol[0]]);}  else{var newCurCol=d[curCol[0]]+" " +unitList[finderCol];}}
+            
+            if(curCol!=undefined && curRad!=undefined){
+	            divTool.html(
+	            	curX[0]+" (X): "+newCurX + "<br/>"  + 
+					curY[0]+" (Y): "+newCurY + "<br/>"  + 
+					curRad[0]+" (Radius): "+newCurRad + "<br/>"  + 
+					curCol[0]+" (Color): "+newCurCol
+	            	) 
+	            	.style("left", (d3.event.pageX+10) + "px")     
+	                .style("top", (d3.event.pageY - 0) + "px"); 
+            }
+            
+            if(curCol!=undefined && curRad==undefined){
+	            divTool.html(
+	            	curX[0]+" (X): "+newCurX + "<br/>"  + 
+					curY[0]+" (Y): "+newCurY + "<br/>"  + 
+					curCol[0]+" (Color): "+newCurCol
+	            	) 
+	            	.style("left", (d3.event.pageX+10) + "px")     
+	                .style("top", (d3.event.pageY - 0) + "px"); 
+            }
+            
+            if(curCol==undefined && curRad!=undefined){
+	            divTool.html(
+	            	curX[0]+" (X): "+newCurX + "<br/>"  + 
+					curY[0]+" (Y): "+newCurY + "<br/>"  + 
+					curRad[0]+" (Radius): "+newCurRad
+	            	) 
+	            	.style("left", (d3.event.pageX+10) + "px")     
+	                .style("top", (d3.event.pageY - 0) + "px"); 
+            }
+            
+             if(curCol==undefined && curRad==undefined){
+	            divTool.html(
+	            	curX[0]+" (X): "+newCurX + "<br/>"  + 
+					curY[0]+" (Y): "+newCurY
+	            	) 
+	            	.style("left", (d3.event.pageX+10) + "px")     
+	                .style("top", (d3.event.pageY - 0) + "px"); 
+            }
+            
+            	 
+                   
+            
+
+            
+            })    
+                          
+        .on("mouseout", function(d) {       
+        	 parcoords.unhighlight([objectifyHighlight]);
+            divTool.transition()        
+                .duration(500)      
+                .style("opacity", 0);   
+            scattered.transition()
+            	.duration(500) 
+            	.style("stroke-width",0)
+            	;
+            	// .attr("r",function(q){if (q==d){return toolhover;}else{return d3.select(this).attr("r");}})
+        });
+//tooltip time 
+
+
+
+plotUpdate(allObjects,brushees,1);
+}
+
+function plotUpdate(allObjects,brushedObjects,brusher){
+	if(brusher==1){
+		transDur=0;
+	}
+	else{
+		transDur=transBack;
+	}
+	function initiate(){
+
+		if(scatters!=undefined){
+			// scatters.remove();
+			if(xAx!=undefined){
+				xAx.remove();
+			}
+			if(yAx!=undefined){
+				yAx.remove();
+			}
+		}
+	}
+	
+	$.when(initiate()).done(function(){
+	
+	if(curX=="Date"){
+		x.domain((d3.extent(allObjects,function(d){return d[curX[0]];})));
+		
+		xAx=svgTrend.append("g")			
+			.attr("class", "x axis")
+			.attr("transform", "translate(0," + height + ")")
+			.call(xAxis)
+			;
+		xAxText=xAx.append("text")
+			   .attr("transform", "translate("+width+",-20)")
+			      .attr("y", 6)
+			      .attr("dy", ".71em")
+			      .style("text-anchor", "end")
+			      .text(curX[0])	
+			      ;
+	}
+	
+	else{
+		x2.domain(d3.extent(allObjects,function(d){return d[curX[0]];}));
+		xAx=svgTrend.append("g")			
+			.attr("class", "x axis")
+			.attr("transform", "translate(0," + height + ")")
+			.call(xAxis2)
+			;
+		xAxText=xAx.append("text")
+			   .attr("transform", "translate("+width+",-20)")
+			      .attr("y", 6)
+			      .attr("dy", ".71em")
+			      .style("text-anchor", "end")
+			      .text(curX[0])	
+			      ;
+			
+	}
+	if(curY=="Date"){
+		y2.domain((d3.extent(allObjects,function(d){return d[curY[0]];})));
+		yAx=svgTrend.append("g")			
+			.attr("class", "y axis")
+			// .attr("transform", "translate(0," + height + ")")
+			.call(yAxis2)
+	      		;
+  		yAxText=yAx.append("text")
+	      .attr("transform", "rotate(-90)")
+	      .attr("y", 6)
+	      .attr("dy", ".71em")
+	      .style("text-anchor", "end")
+	      .text(curY[0])
+      		;
+		// console.log(curY[0]);
+	}
+	else{
+		y.domain((d3.extent(allObjects,function(d){return d[curY[0]];})));
+		yAx=svgTrend.append("g")			
+			.attr("class", "y axis")
+
+			.call(yAxis)
+	      		;
+  		yAxText=yAx.append("text")
+	      .attr("transform", "rotate(-90)")
+	      .attr("y", 6)
+	      .attr("dy", ".71em")
+	      .style("text-anchor", "end")
+	      .text(curY[0])
+      		;
+	}	  
+	
+	if(curRad!=undefined){
+		radScale.domain((d3.extent(allObjects,function(d){return d[curRad[0]];})));
+	};
+
+	if (curCol!=undefined){
+		// console.log(curCol);
+		colMin=d3.min(allObjects,function(d){return d[curCol[0]];});
+		colMax=d3.max(allObjects,function(d){return d[curCol[0]];});
+		// colorScale.domain([colMin,colMin+(colMax-colMin)/5,colMin+(colMax-colMin)/4,colMin+(colMax-colMin)/3,colMin+(colMax-colMin)/2,colMax]);
+		colorScale.domain([colMin,colMax]);
+		// console.log(colMin);
+		
+		parcolor=function(d) { 
+	      	return colorScale(d[curCol[0]]);
+	      	};
+	    parcoords.color(parcolor);
+	}
+	else{
+		parcolor="black";
+		parcoords.color(parcolor);
+	};
+
+	
+	
+	// colorScale.domain([colMin,colMax]);  
+	 scatters=svgTrend.append("g")
+		.attr("class","sofresh")
+		;
+
+	// var mainRad=2;
+	
+		scattered
+		      .transition().duration(transDur)
+		      .style("blend-mode","multiply")
+		      .style("fill", 
+		      	function(d) { 
+		      	if(curCol!=undefined){
+		      		return colorScale(d[curCol[0]]);
+		      	}
+		      	else{return "black";}
+		      })
+		      .attr("r", 
+		      	function(d) {
+			      	if(curRad!=undefined){	 
+			      		return radScale(d[curRad[0]]);
+			      	}
+			      	else if(curRad==undefined){
+				      	return mainRad;
+			      	}	      	
+		      })   
+		      .attr("cx", function(d) { 
+		      	if(curX=="Date"){		      	
+		      		return x(d[curX[0]]);
+		      		}	
+		      	else{		      	
+		      		return x2(d[curX[0]]);
+		      		}			  
+		      	})
+		      .attr("cy", function(d) { 
+		      	if(curY=="Date"){		      	
+		      		return y2(d[curY[0]]);
+		      		}	
+		      	else{		      	
+		      		return y(d[curY[0]]);
+		      		}			  
+		      	})
+			;
+	});	
+}		
+
+
+
+		
+function parcoordRun(){
+parcoords = d3.parcoords()("#parc")
+	.width(mainWidth)
+	.height(mainHeight)
+    // .color("black")
+    // .alpha(.05);
+	;
+function checker(){
+}
+  parcoords
+    .data(allObjects)  
+    .alpha(.05) 	
+    .lineWidth(.01)
+    .color("black")
+    .render()
+    .shadows()
+    .interactive()
+    .brushable()
+    // .reorderable()    
+    .on("brush", function(items) {
+    	var newAlpha=(map_range(parcoords.brushed().length,0,500,1,.25));
+    	var newStroke=map_range(parcoords.brushed().length,0,500,.35,.15);
+    	parcoords.lineWidth(newStroke);
+    	parcoords.alpha(newAlpha);
+    	brushees=parcoords.brushed();
+    	plotScrub(allObjects,parcoords.brushed());  
+    		
+    })
+    ;  
+    // console.log(parcoords.state);
+
+};
+
+
+
+// CSV Uploader
+var uploader = document.getElementById("uploader");  
+var reader = new FileReader();
+var loadSeattle = document.getElementById("loadSeattle");  
+reader.onload = function(e) {
+  contents = e.target.result;
+  dataCollection(contents,1);
+  // var data = d3.csv.parse(contents);
+  // parallelCoordinates(data);
+
+  // remove button, since re-initializing doesn't work for now
+  uploader.parentNode.removeChild(uploader);
+  loadSeattle.parentNode.removeChild(loadSeattle);
+};
+
+
+// 
+// 
+// loadSeattle.addEventListener("click", handleSeattle, false);  
+// uploader.addEventListener("change", handleFiles, false);  
+
+function handleFiles() {
+   d3.select("#uploader")
+	// .append("svg")
+	.transition().duration(transDur)
+		.style("height", "0px")
+		// .attr("height", height + margin.top + margin.bottom)
+		;
+  d3.select("#scatterPlot")
+	// .append("svg")
+	.transition().duration(transDur)
+		.style("margin-left", "250px")
+		// .style("height", "550px")
+		// .attr("height", height + margin.top + margin.bottom)
+		;
+  d3.select("#parc")
+	// .append("svg")
+	.transition().duration(transDur)
+		.style("margin-left", "250px")
+		.style("margin-top", "0px")
+		// .attr("height", height + margin.top + margin.bottom)
+		;
+  d3.select(".titleBarMain")
+	// .append("svg")
+	.transition().duration(transDur)
+		.style("margin-left", "0px")
+		// .attr("height", height + margin.top + margin.bottom)
+		;
+ // console.log(this.files);
+  var file = this.files[0];
+  // console.log(file);
+  reader.readAsText(file);
+};
+
+function handleSeattle() {
+	// console.log('hanlddl');
+   d3.select("#uploader")
+	// .append("svg")
+	.transition().duration(transDur)
+		.style("height", "0px")
+		// .attr("height", height + margin.top + margin.bottom)
+		;
+  d3.select("#scatterPlot")
+	// .append("svg")
+	.transition().duration(transDur)
+		.style("margin-left", "250px")
+		// .style("height", "550px")
+		// .attr("height", height + margin.top + margin.bottom)
+		;
+  d3.select("#parc")
+	// .append("svg")
+	.transition().duration(transDur)
+		.style("margin-left", "250px")
+		.style("margin-top", "0px")
+		// .attr("height", height + margin.top + margin.bottom)
+		;
+  d3.select(".titleBarMain")
+	// .append("svg")
+	.transition().duration(transDur)
+		.style("margin-left", "0px")
+		// .attr("height", height + margin.top + margin.bottom)
+		;
+
+  //dataCollectionSatellite(20);
+  // reader.readAsText(this.file);
+};
+</script>
+
+
+</body>

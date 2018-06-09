@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+	<head>
+		<!--Turn off javascript cache-->
+		<meta http-equiv="no-cache">
+		<meta http-equiv="Expires" content="-1">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta http-equiv="content-type" content="text/html; charset=UTF8">
+		
+		<!--
+		<link type="text/css" rel="stylesheet" href="style.css"/>
+		-->
+	</head>
+
+	<body>
+		<title>Commercial Ship Case Study</title>
+		
+		<h2>Single-Epoch Analysis</h2>
+		<a href="./single_epoch/index_2016_10_26.html">Interactive Scatter Plot</a>
+		<p>
+			Description: Interactive scatter plot and parallel coordinates for primary contract epoch.
+		</p>
+		<!--<img src="./img/single_epoch.png" alt="Screenshot" style="width:25%; float:right;">-->
+		<img src="./img/single_epoch.png" alt="Screenshot" style="width:50%;">
+		
+		
+		<h2>Multi-Epoch Analysis (OLAP)</h2>
+		<a href="./multi_epoch/index3.html">Sub-Sampled Version (OLAP)</a>
+		<p>
+			Description: Took 500 random samples of larger data set containing 41,204 designs.
+			Examines multi-epoch matrics including efNPT and centrality metrics (betweeness, closeness, outdegree).
+		</p>
+		<br/>
+		<a href="./multi_epoch/index4.html">Filtered Version (OLAP)</a>
+		<p>
+			Description: Filtered transition matrices of larger data set containing 41,204 designs to look only at changability where the cost is less than $100M and change time is less than 90 days.
+			Takes longer to load than the sampled data set, but contains all 41,204 designs.
+			Examines multi-epoch matrics including efNPT and centrality metrics (betweeness, closeness, outdegree).
+			Only a small subset of designs exhibit a high betweeness centrality which makes them difficult to see on the graph.
+			Designs with high betweeness also tend to have relatively low outdegree in this case which may make this a good example of where trade-offs need to be made between the two metrics.
+		</p>
+		<a href="./multi_epoch/index5.html">Filtered Version (OLAP)</a>
+		<p>
+			Description: Filtered OLAP version like above except updated to Carl's Jan 2017 version 2 dataset.
+		</p>
+		<img src="./img/multi_epoch_olap.png" alt="Screenshot" style="width:50%;">
+		
+		
+		<h2>Multi-Epoch Analysis (Heatmap)</h2>
+		<a href="./multi_epoch_heatmap/index.html">Interactive Heatmap</a>
+		<p>
+			Description: Interactive Heatmap showing the trade-off between Pareto efficiency and Pareto Trace (frequency across epochs).
+		</p>
+		<img src="./img/multi_epoch_heatmap.png" alt="Screenshot" style="width:50%;">
+		
+		
+		<h2>Single-Era Analysis</h2>
+		<a href="./single_era_spacetug/single_era.html">Single-Era (OLAP)</a>
+		<p>
+			Description: Older example using spacetug era data to show how OLAP can be used with line graphs.
+			Also implements time series metrics: expedience, average, range, greatest delta, and volitility.
+		</p>
+		<img src="./img/single_era.png" alt="Screenshot" style="width:50%;">
+		<br/>
+		<a href="./single_era/single_era.html">Single-Era (OLAP)</a>
+		<p>
+			Description: <strong>Work in progress</strong> on ship single era analysis.  
+			Needs update of version 2 case study data...
+		</p>
+		<img src="./img/single_era2.png" alt="Screenshot" style="width:50%;">
+		
+		<h2>Multi-Era Analysis</h2>
+		<a href="./single_era_spacetug/chord.html">Multi-Era (Chord diagram)</a>
+		<p>
+			Description: <strong>Work in progress</strong>
+			Another older example using spacetug era data to demonstrate how chord diagram may aid recognition of change option usage patterns.
+		</p>
+		<img src="./img/chord.png" alt="Screenshot" style="width:50%;">
+		
+		
+	</body>
+</html>

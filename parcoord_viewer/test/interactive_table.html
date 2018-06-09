@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <meta charset="utf-8">
+	    <title>Spacetug Interactive Table</title>
+	    <link type="text/css" rel="stylesheet" href="style.css"/>
+	</head>
+
+	<body>
+        <h2>Spacetug Designs</h2>
+        
+        <div id="table_container">
+			<table id="main_table">
+				<thead>
+					<tr>
+						<th>Design ID</th>
+						<th>Capability</th>
+						<th>Propulsion</th>
+						<th>Fuel mass</th>
+						<th>DFC</th>
+						<th>Payload</th>
+						<th>Speed</th>
+						<th>Delta V</th>
+						<th>Base mass</th>
+						<th>Mass fraction</th>
+						<th>ISP</th>
+						<th>Dry mass</th>
+						<th>Wet mass</th>
+						<th>Cost</th>
+						<th>MAU</th>
+						<th>FPN</th>
+					</tr>
+				</thead>
+			</table>
+		</div>  
+        
+        <!--<script src="http://d3js.org/d3.v3.min.js"></script>-->
+        <script src="https://d3js.org/d3.v3.min.js"></script>
+        <script src="treatment_c.js"></script>
+        <script src="tablefilter/tablefilter.js"></script>
+	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	    <script src="https://code.jquery.com/jquery.min.js"></script>
+	    
+		<script data-config>
+		$( document ).ready(function() {
+		    var filtersConfig = {
+		        base_path: 'tablefilter/',
+			    alternate_rows: true,
+			    rows_counter: true,
+			    rows_counter_text: 'Number of Designs: ',
+			    btn_reset: true,
+			    btn_reset_text: "Clear",
+			    loader: true,
+			    no_results_message: true,
+		    
+			    col_widths: [
+			        '50px', '50px', '50px', '50px',
+			        '50px', '50px', '50px', '50px',
+			        '50px', '50px', '50px', '50px',
+			        '50px', '50px', '50px', '50px'
+			    ],
+				
+				// columns data types
+			    col_types: [
+			        'formatted-number',
+			        'string',
+			        'string',
+			        'formatted-number',
+			        'formatted-number',  
+			        'formatted-number',
+			        'formatted-number',
+			        'formatted-number',
+			        'formatted-number',
+			        'formatted-number',
+			        'formatted-number',  
+			        'formatted-number',
+			        'formatted-number',
+			        'formatted-number',
+			        'formatted-number',
+			        'formatted-number'
+			    ],
+			    
+			    extensions: [{ name: 'sort' }]
+				    
+		   		/*
+		        col_0: 'checklist',
+		        col_1: 'select',
+		        col_2: 'multiple',
+		        col_8: 'none',
+		        */
+		       /*
+		      	col_0: 'none',
+		        col_1: 'none',
+		        col_2: 'none',
+		        col_3: 'none',
+		        col_4: 'none',
+		        col_5: 'none',
+		        col_6: 'none',
+		        col_7: 'none',
+		        col_8: 'none',
+		        col_9: 'none',
+		        */
+		    };
+		    var tf = new TableFilter('main_table', filtersConfig);
+		    tf.init();
+		});
+		</script>
+       
+    </body>
+</html>

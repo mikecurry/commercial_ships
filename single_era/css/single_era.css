@@ -1,0 +1,95 @@
+	#container0 {
+		float: left;
+		/*background-color: steelblue;*/
+		height: 500px;
+		width: 10%;
+		font-size: 0px; /* fixes whitespace issue between divs */
+		margin: 0.0% 0.5% 0.0% 0.5%; /*top, right, bottom,left*/
+	}
+	
+	#container1 {
+		float: left;
+		/*background-color: steelblue;*/
+		height: 500px;
+		width: 35%;
+		font-size: 0px; /* fixes whitespace issue between divs */
+	}
+	
+	#container2 {
+		float: left;
+		/*background-color: blue;*/
+		height: 500px;
+		width: 24%;
+		font-size: 0px; /* fixes whitespace issue between divs */
+		margin: 0.0% 0.5% 0.0% 0.5%; /*top, right, bottom,left*/
+		padding: 0.0% 0.0% 0.25% 0.0%; /*top, right, bottom,left*/
+	}
+	
+	#design-table-container {
+		border: 0.5px solid #1A3765;
+		float: left;
+		background-color: white;
+		border-radius: 5px;
+		/*clear:both;*/
+		height:495px;
+		width:29%;
+		/*margin: 0.0% 0.0% 5.0% 0.0%;*/ /*top, right, bottom,left*/
+		overflow: scroll;
+		/*font-size: 0px; *//* fixes whitespace issue between divs */
+		padding: 0.5%; /*top, right, bottom,left*/
+	}
+
+	#container3 {
+		float: left;
+		background-color: red;
+		height: 500px;
+		/*width: 58%;*/
+		width: 29%;
+		/*font-size: 0px; *//* fixes whitespace issue between divs */
+		padding: 0.0% 0.0% 5% 0.0%; /*top, right, bottom,left*/
+	}
+	
+	.three_charts_long {
+		border: 0.5px solid #1A3765;
+		border-radius: 5px;
+		display:inline-block;
+		/*clear:both;*/
+		float:left;
+		font-size: 10px;
+		background-color: white;
+		/*opacity: 0.5;*/
+		height: 32.33%;
+		width: 99%;
+		margin: 0.5% 0.5% 0.0% 0.5%; /*top, right, bottom,left*/
+		overflow:hidden;
+	}
+	.six_charts_long {
+		border: 0.5px solid #1A3765;
+		display:inline-block;
+		float:none;
+		font-size: 10px;
+		background-color: white;
+		border-radius: 5px;
+		height: 16.15%;
+		width: 99%;
+		margin: 0.5% 0.5% 0.0% 0.5%; /*top, right, bottom,left*/
+	}
+	
+	th {
+		/*display: inline-block;*/
+		text-align: left;
+		/*padding: 15px;*/
+		width: 130px;
+	}
+	
+	tr {
+		/*display: inline-block;*/
+		text-align: left;
+		width: 75px;
+		line-height: 1.5em;
+		/*background: #c3544f;*/
+		/*font-size: 10px;
+		font-weight: bold;
+		font-family: sans-serif;*/
+	}
+	

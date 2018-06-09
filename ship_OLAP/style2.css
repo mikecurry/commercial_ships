@@ -1,0 +1,118 @@
+#design-table-container {
+	border: 1px solid #AAAAAA;
+	float: left;
+	/*margin: 0.5%;*/
+	padding: 0.5%;
+	background-color: white;
+	border-radius: 10px;
+	/*clear:both;*/
+	height:600px;
+	width:31%;
+	margin:0.5%;
+	overflow: scroll;
+}
+
+#design-table {
+	/*
+	min-height: 1024px;
+	clear:both;
+	height:300px;
+	overflow: scroll;
+	*/
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	/*font-weight: bold;*/
+}
+
+th {
+	/*display: inline-block;*/
+	text-align: left;
+	/*padding: 15px;*/
+	width: 130px;
+}
+
+tr {
+	/*display: inline-block;*/
+	text-align: left;
+	width: 75px;
+	line-height: 1.5em;
+	/*background: #c3544f;*/
+	/*font-size: 10px;
+	font-weight: bold;
+	font-family: sans-serif;*/
+}
+
+#designspace-container {
+	border: 1px solid #AAAAAA;
+	float: left;
+	/*margin: 0.5%;
+	padding: 0.5%;*/
+	background-color: white;
+	border-radius: 10px;
+	/*clear:both;*/
+	height:600px;
+	width:32%;
+	margin:0.5%;
+	/*overflow: scroll;*/
+}
+
+#perfspace-container {
+	border: 1px solid #AAAAAA;
+	float: left;
+	/*margin: 0.5%;
+	padding: 0.5%;*/
+	background-color: white;
+	border-radius: 10px;
+	/*clear:both;*/
+	height:600px;
+	width:32%;
+	margin: 0.5% 0.5% 0.5% 0.5%; /* top right bottom left */
+	/*overflow: scroll;*/
+}
+
+.dv_charts {
+	/*border: 1px solid blue;*/
+	float: left;
+	height:15%;
+	width:48%;
+	margin: 0.5%;
+}
+
+.perf_charts {
+	/*border: 1px solid blue;*/
+	float: left;
+	height:15%;
+	width:98%;
+	margin: 0.5%;
+}
+
+.perf_charts2 {
+	/*border: 1px solid blue;*/
+	float: left;
+	height:36%;
+	/*width:49%;*/
+	width:55%;
+	margin: 0.5% 0.5% 0.5% 0.5%; /* top right bottom left */
+}
+
+.perf_charts3 {
+	/*border: 1px solid blue;*/
+	float: left;
+	height:38%;
+	/*width:49%;*/
+	width:21%;
+	margin: 0.5% 0.5% 0.5% 0.5%; /* top right bottom left */
+}
+
+
+#nfpt .x.axis text {
+    text-anchor: end !important;
+    transform: rotate(-45deg);
+}
+
+.dc-chart g.row text {
+  font-size: 10px;
+}

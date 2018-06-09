@@ -1,0 +1,96 @@
+#design-table-container {
+	border: 2px solid #1A3765;
+	float: left;
+	margin: 0.5%;
+	padding: 0.5%;
+	background-color: white;
+	border-radius: 10px;
+	/*clear:both;*/
+	height:200px;
+	width:97.5%;
+	overflow: scroll;
+}
+
+#design-table {
+	/*
+	min-height: 1024px;
+	clear:both;
+	height:300px;
+	overflow: scroll;
+	*/
+}
+
+th {
+	/*display: inline-block;*/
+	text-align: left;
+	/*padding: 15px;*/
+	width: 130px;
+}
+
+tr {
+	/*display: inline-block;*/
+	text-align: left;
+	width: 75px;
+	line-height: 1.5em;
+	/*background: #c3544f;*/
+	/*font-size: 10px;
+	font-weight: bold;
+	font-family: sans-serif;*/
+}
+
+#designspace-container {
+	border: 2px solid #1A3765;
+	float: left;
+	margin: 0.5%;
+	padding: 0.5%;
+	background-color: white;
+	border-radius: 10px;
+	/*clear:both;*/
+	height:150px;
+	width:97.5%;
+	/*overflow: scroll;*/
+}
+
+#generic-container {
+	border: 2px solid #1A3765;
+	float: left;
+	margin: 0.5%;
+	padding: 0.5%;
+	background-color: white;
+	border-radius: 10px;
+	/*clear:both;*/
+	height:300px;
+	width:97.5%;
+}
+
+.two_charts_wide {
+	/*border: 1px solid blue;*/
+	float: left;
+	height:90%;
+	width:48%;
+	margin: 0.5%;
+}
+
+.three_charts_wide {
+	/*border: 1px solid blue;*/
+	float: left;
+	height:90%;
+	width:32%;
+	margin: 0.5%;
+}
+
+.four_charts_wide {
+	/*border: 1px solid blue;*/
+	float: left;
+	height:90%;
+	width:24%;
+	margin: 0.5%;
+}
+
+.x_charts_wide {
+	/*border: 1px solid blue;*/
+	float: left;
+	height:90%;
+	width:10%;
+	margin: 0.5%;
+}

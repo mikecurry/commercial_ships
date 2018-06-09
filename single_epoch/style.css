@@ -1,0 +1,58 @@
+body {
+  font-size: 10px;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  margin: 24px;
+  background-color: white;
+  line-height: 1.45em;
+}
+
+.dot{
+	fill-opacity:.85;
+}
+
+path { 
+	stroke: steelblue;
+	stroke-width: 1;
+	fill: none;
+}
+.colorNode{
+	/*fill:lightgrey;	*/
+	/*opacity:.5;*/
+}
+.colorNode:hover{
+	/*fill:black;*/
+}
+.radiusNode{
+	/*fill:lightgrey;	*/
+	/*opacity:.5;*/
+}
+.radiusNode:hover{
+	/*fill:black;*/
+}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: black;
+	stroke-width: 3;
+	shape-rendering: crispEdges;
+}
+
+
+.titleBar{
+	margin-left:50px;
+	margin-top:5px;
+
+}
+#scatterPlot{
+
+}
+#parc{
+
+}
+
+.titleBarMain{
+	position:absolute;
+	/*margin-top:0px;*/
+}
+

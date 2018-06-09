@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+	<head>
+		<!--Turn off javascript cache-->
+		<meta http-equiv="no-cache">
+		<meta http-equiv="Expires" content="-1">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta http-equiv="content-type" content="text/html; charset=UTF8">
+
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/jquery.layout-latest.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-latest.js"></script>
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link type="text/css" rel="stylesheet" href="css/dc.css"/>	
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		
+		<script type="text/javascript" src="js/d3/d3.v3.js"></script>
+		<script type="text/javascript" src="js/d3/d3.v3.min.js"></script>
+		<script type="text/javascript" src="js/crossfilter.v1.js"></script>
+		<script type="text/javascript" src="js/crossfilter.v1.min.js"></script>
+		<script type="text/javascript" src="js/dc.js"></script>
+		
+		<link type="text/css" rel="stylesheet" href="style2.css"/>
+		<script type="text/javascript" src="js/ships_olap4.js"></script>
+	</head>
+
+	<body>
+	<title>Ships: Filtered Design Space</title>
+	<h4>Filtered Design Space (change cost <$100M, change time <90 days)</h4>
+	<div style="width:32%; text-align:center; float:left;"><h4>Design Space</h4></div>
+	<div style="width:32%; text-align:center; float:left;"><h4>Performance Space</h4></div>
+	<div style="width:32%; text-align:center; float:left;"><h4>Design List: <span id="mean"></span> of 41024 remaining</h4></div>
+	
+	<div>
+		<div id="designspace-container">
+			<div id="l_chart";     class="dv_charts">Length</div>
+			<div id="b_chart";     class="dv_charts">Beam</div>
+			<div id="d_chart";     class="dv_charts">Depth</div>
+			<div id="crane_chart"; class="dv_charts">Crane</div>
+			<div id="pob_chart";   class="dv_charts">POB</div>
+			<div id="power_chart"; class="dv_charts">Power</div>
+			<div id="lwi_chart";   class="dv_charts">LWI</div>
+			<div id="mp_chart";    class="dv_charts">MP</div>
+			<div id="fuel_chart";  class="dv_charts">Fuel</div>
+			<div id="rov_chart";   class="dv_charts">ROV</div>
+			<div id="dp_chart";    class="dv_charts">DP</div>
+			<div id="pc_chart";    class="dv_charts">PC</div>
+			<div id="dfc_chart";   class="dv_charts">DFC</div>
+		</div>
+		
+		<div id="perfspace-container">
+			<!--Charts-->
+			<div id="cost";       class="perf_charts">Cost</div>
+			<div id="eco";        class="perf_charts">Eco Friendliness</div>
+			<div id="betweeness"; class="perf_charts">Betweeness</div>
+			<div id="closeness";  class="perf_charts">Closeness</div>
+			<div id="outdegree";  class="perf_charts">Outdegree</div>
+			<!--Slider-->
+			<div style="float:left; margin-top:4%; padding:0.5%; width:97.5%">
+				<p>
+				  <label for="FPN_threshold" 
+				         style="width:100%; text-align:left">
+				         FPN_threshold = <span id="FPN_threshold-value">…</span>
+				  </label>
+				  <input type="range" min="0" max="100" id="FPN_threshold">
+				</p>
+			</div>
+			<!--Charts-->
+			<div id="nfpt";      class="perf_charts">efNPT (% Epochs)</div>
+			<!--
+			<div id="nfpt";      class="perf_charts2">fNPT (% Epochs)</div>
+			<div id="s1_epochs"; class="perf_charts3">Stakeholder 1</div>
+			<div id="s2_epochs"; class="perf_charts3">Stakeholder 2</div>
+			-->
+		</div>
+	</div>
+
+	<!-- DATA TABLE -->
+	<div id="design-table-container" class="list">
+		<table id="design-table">
+			<thead>
+			<tr class="header">
+				<th>Design ID</th>
+				<th>Cost</th>
+				<th>FPN1</th>
+				<th>efNPT</th>
+				<th>Betweeness</th>
+				<th>Outdegree</th>				
+			</tr>
+			</thead>
+		</table>
+	</div>
+	<div id="lists">
+		<div id="flight-list" class="list"> </div>
+	</div>
+
+	</body>
+</html>

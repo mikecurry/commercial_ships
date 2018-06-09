@@ -1,0 +1,64 @@
+load FPN_his1.mat
+load FPN_his2.mat
+load('MAU1_single_era.mat')
+load('MAU2_single_era.mat')
+load('Cash_flow_single_era.mat')
+load('Acq_costs_6des.mat'); acq_cost = ans;
+load('NPVs_single_era.mat')
+
+%fpn_variability      = sum(abs((fpn_out(:,2:end) - fpn_out(:,1:end-1))'));
+%fpn_average          = sum(fpn_out')/(tfinal);
+
+num_designs    = size(FPN_history1,1);
+num_eras       = size(FPN_history1,2);
+num_time_steps = size(FPN_history1,3);
+
+fpn1_average=zeros(num_designs,num_eras);
+fpn2_average=zeros(num_designs,num_eras);
+fpn1_volitility=zeros(num_designs,num_eras);
+fpn2_volitility=zeros(num_designs,num_eras);
+for ii = 1:num_designs
+    for jj = 1:num_eras
+        %fpn1_average(ii,jj)    = sum(FPN_history1(ii,jj,:))/num_time_steps;
+        %fpn1_volitility(ii,jj) = sum(abs(FPN_history1(ii,jj,2:end)-FPN_history1(ii,jj,1:end-1)));
+        %fpn2_average(ii,jj)    = sum(FPN_history2(ii,jj,:))/num_time_steps;
+        %fpn2_volitility(ii,jj) = sum(abs(FPN_history2(ii,jj,2:end)-FPN_history2(ii,jj,1:end-1)));
+        fpn_average(ii,jj)    = sum([squeeze(FPN_history1(ii,jj,:)); squeeze(FPN_history2(ii,jj,:))])/(2*num_time_steps);
+        fpn_volitility(ii,jj) = sum(abs(FPN_history1(ii,jj,2:end)-FPN_history1(ii,jj,1:end-1)));
+    end
+end
+
+data_out = zeros(num_designs*num_eras*num_time_steps, 14);
+row = 0;
+for ii = 1:num_designs
+    for jj = 1:num_eras
+        for kk = 1:num_time_steps
+            row = row+1;
+            data_out(row,1) = ii;
+            data_out(row,2) = jj;
+            data_out(row,3) = kk;
+            data_out(row,4) = FPN_history1(ii,jj,kk);
+            data_out(row,5) = FPN_history2(ii,jj,kk);
+            data_out(row,6) = Era_epochs_MAU_1(ii,jj,kk);
+            data_out(row,7) = Era_epochs_MAU_2(ii,jj,kk);
+            data_out(row,8) = Cash_flow_history(ii,jj,kk);
+            data_out(row,9) = acq_cost(ii);
+            data_out(row,10) = NPV_single_era(ii,jj);
+            data_out(row,11) = fpn_average(ii,jj);
+            data_out(row,12) = fpn_volitility(ii,jj);
+            
+            %data_out(row,11) = fpn1_average(ii,jj);
+            %data_out(row,12) = fpn1_volitility(ii,jj);
+            %data_out(row,13) = fpn2_average(ii,jj);
+            %data_out(row,14) = fpn2_volitility(ii,jj);
+        end
+    end
+end
+
+filename = 'ship_era_data.csv';
+fid = fopen(filename, 'w');
+fprintf(fid, 'design,era,time,fpn1,fpn2,mau1,mau2,cash_flow,acq_cost,npv,fpn1_avg,fpn1_vol,fpn2_avg,fpn2_vol\n');
+fclose(fid);
+%dlmwrite(filename, data_out, '-append', 'precision', '%.3f');
+dlmwrite(filename, data_out, '-append');
+

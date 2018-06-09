@@ -1,0 +1,48 @@
+	#container1 {
+		border: 1px solid #1A3765;
+		float: left;
+		/*margin: 0.5%;*/
+		margin: 1.0% 0.0% 0.5% 1.0%; /*top, right, bottom,left*/
+		padding: 0.0%;
+		background-color: white;
+		border-radius: 5px;
+		/*clear:both;*/
+		height: 500px;
+		width: 60%;
+	}
+	#container2 {
+		/*border: 1px solid #1A3765;*/
+		float: left;
+		margin: 1.0% 0.0% 0.5% 0.5%; /*top, right, bottom,left*/
+		padding: 0.0%;
+		background-color: white;
+		border-radius: 5px;
+		/*clear:both;*/
+		height: 500px;
+		width: 38%;
+	}
+	#line_chart {
+		height: 99%;
+		width: 99%;
+		/*border: 2px solid #1A3765;*/
+		background-color: white;
+	}
+	.three_charts_wide {
+		/*border: 1px solid blue;*/
+		float: left;
+		height: 90%;
+		width: 32%;
+		margin: 0.5%;
+	}
+	.five_charts_long {
+		border: 0.5px solid #1A3765;
+		display:inline-block;
+		float:none;
+		font-size: 10px;
+		background-color: white;
+		border-radius: 5px;
+		/*float: left;*/
+		height: 19.65%;
+		width: 98%;
+		margin: 0.5% 0.5% 0.0% 0.5%; /*top, right, bottom,left*/
+	}

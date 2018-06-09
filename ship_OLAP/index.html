@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+	<head>
+		<!--Turn off javascript cache-->
+		<meta http-equiv="no-cache">
+		<meta http-equiv="Expires" content="-1">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta http-equiv="content-type" content="text/html; charset=UTF8">
+
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/jquery.layout-latest.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-latest.js"></script>
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link type="text/css" rel="stylesheet" href="css/dc.css"/>	
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		
+		<script type="text/javascript" src="js/d3/d3.v3.js"></script>
+		<script type="text/javascript" src="js/d3/d3.v3.min.js"></script>
+		<script type="text/javascript" src="js/crossfilter.v1.js"></script>
+		<script type="text/javascript" src="js/crossfilter.v1.min.js"></script>
+		<script type="text/javascript" src="js/dc.js"></script>
+		
+		<link type="text/css" rel="stylesheet" href="style.css"/>
+		<script type="text/javascript" src="js/ships_olap.js"></script>
+	</head>
+
+	<body>
+		<title>Ship OLAP Demo</title>
+
+		<div id="designspace-container">
+			<div id="l_chart"; class="x_charts_wide">Length</div>
+			<div id="b_chart"; class="x_charts_wide">Beam</div>
+			<div id="d_chart"; class="x_charts_wide">Depth</div>
+		</div>
+		<div id="generic-container">
+			<div id="deck_area";      class="three_charts_wide">Deck Area</div>
+			<div id="cost";           class="three_charts_wide">Cost</div>
+			<div id="fpn1"; class="three_charts_wide">FPN1</div>
+		</div>
+
+		<div style="float: left; margin: 0.5%; padding: 0.5%; width:97.5%">
+			<p>
+			  <label for="FPN_threshold" 
+			         style="display: inline-block; width: 240px; text-align: right">
+			         FPN_threshold = <span id="FPN_threshold-value">…</span>
+			  </label>
+			  <input type="range" min="0" max="100" id="FPN_threshold">
+			</p>
+		</div>
+		<div id="generic-container">
+			<div id="nfpt";      class="three_charts_wide">(% Epochs)</div>
+			<div id="s1_epochs"; class="three_charts_wide">Stakeholder 1 Epochs</div>
+			<div id="s2_epochs"; class="three_charts_wide">Stakeholder 2 Epochs</div>
+		</div>
+		<br/>
+		
+		<aside id="totals">
+			<b>Designs remaining: <span id="mean"></span> of 65,466</b>
+		</aside>
+		<!-- DATA TABLE -->
+		<div id="design-table-container" class="list">
+			<table id="design-table">
+				<thead>
+				<tr class="header">
+					<th>Design ID</th>
+					<th>Cost</th>
+					<th>fPN1%</th>
+					<th>fNPT%</th>
+					<th>L</th>
+					<th>B</th>
+					<th>D</th>
+					<th>Deck Area</th>					
+				</tr>
+				</thead>
+			</table>
+		</div>
+		
+		<div id="lists">
+		  <div id="flight-list" class="list"></div>
+		</div>
+	</body>
+</html>
